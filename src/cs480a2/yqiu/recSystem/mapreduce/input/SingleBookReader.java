@@ -31,6 +31,7 @@ public class SingleBookReader extends RecordReader<Text, Text> {
 
     private String filename;
     private Text currentLine = new Text("");
+
     @Override
     public void initialize(InputSplit inputSplit, TaskAttemptContext context) throws IOException, InterruptedException {
 
@@ -56,10 +57,32 @@ public class SingleBookReader extends RecordReader<Text, Text> {
 
     }
 
-    private void prepareToScanBook(){
+    private void prepareToScanBook() {
+        while (!getTitle(currentLine)) {
+            try {
+                int readBytes = lineReader.readLine(currentLine);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
 
         while ()
     }
+
+    private boolean getTitle(Text line) {
+        String lineString = line.toString();
+
+        if (lineString.startsWith("Title")) {
+            String titleString = lineString.split(":")[1].substring(1);
+            title = new Text(titleString);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     @Override
     public boolean nextKeyValue() throws IOException, InterruptedException {
         return false;
@@ -77,11 +100,14 @@ public class SingleBookReader extends RecordReader<Text, Text> {
 
     @Override
     public float getProgress() throws IOException, InterruptedException {
-        return 0;
-    }
+        if (start == end) {
+            return 0.0f;
+        } else {
+            return Math.min(1.0f, (currentPos - start) / (float) (end - start));
+        }    }
 
     @Override
     public void close() throws IOException {
-
+        lineReader.close();
     }
 }

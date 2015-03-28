@@ -32,6 +32,9 @@ public class SingleBookReader extends RecordReader<Text, Text> {
     private String filename;
     private Text currentLine = new Text("");
 
+    private boolean hasTitle;
+    private boolean hasStart;
+
     @Override
     public void initialize(InputSplit inputSplit, TaskAttemptContext context) throws IOException, InterruptedException {
 
@@ -54,24 +57,50 @@ public class SingleBookReader extends RecordReader<Text, Text> {
 
         start += lineReader.readLine(currentLine);
 
-
+        prepareToScanBook();
     }
 
     private void prepareToScanBook() {
-        while (!getTitle(currentLine)) {
+        //get the title of the book
+        while (!containsTitle(currentLine)) {
             try {
                 int readBytes = lineReader.readLine(currentLine);
-
+                //if does not find line of title, return
+                if (readBytes == 0 || !hasTitle) {
+                    hasTitle = false;
+                    return;
+                }
+                //update cursor of linereader
+                start += readBytes;
             } catch (IOException e) {
-                e.printStackTrace();
+                hasTitle = false;
+                System.err.println("Error when retriving title for book ---> " + filename);
+                System.err.println(e.getMessage());
             }
 
         }
 
-        while ()
+        //get book start line
+        while (isBookStart(currentLine)) {
+            try {
+                int readBytes = lineReader.readLine(currentLine);
+                //if does not find book start line, return
+                if (readBytes == 0) {
+                    hasStart = false;
+                    return;
+                }
+                //update cursor of linereader
+                start += readBytes;
+            } catch (IOException e) {
+                hasStart = false;
+                System.err.println("Error when retriving start line for book ---> " + filename);
+                System.err.println(e.getMessage());
+            }
+        }
+
     }
 
-    private boolean getTitle(Text line) {
+    private boolean containsTitle(Text line) {
         String lineString = line.toString();
 
         if (lineString.startsWith("Title")) {
@@ -83,19 +112,31 @@ public class SingleBookReader extends RecordReader<Text, Text> {
         }
     }
 
+    private boolean isBookStart(Text line) {
+        String lineString = line.toString();
+        return lineString.startsWith("*** START OF THIS PROJECT");
+    }
+
     @Override
     public boolean nextKeyValue() throws IOException, InterruptedException {
+        if (filename.endsWith("txt")) {//only process txt file
+            return false;
+        }
+        if (currentPos > end || !hasStart || !hasTitle) {
+            return false;
+        }
+
         return false;
     }
 
     @Override
     public Text getCurrentKey() throws IOException, InterruptedException {
-        return null;
+        return word;
     }
 
     @Override
     public Text getCurrentValue() throws IOException, InterruptedException {
-        return null;
+        return title;
     }
 
     @Override
@@ -104,7 +145,8 @@ public class SingleBookReader extends RecordReader<Text, Text> {
             return 0.0f;
         } else {
             return Math.min(1.0f, (currentPos - start) / (float) (end - start));
-        }    }
+        }
+    }
 
     @Override
     public void close() throws IOException {

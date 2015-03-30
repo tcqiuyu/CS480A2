@@ -16,13 +16,13 @@ import java.io.IOException;
 /**
  * Created by Qiu on 3/18/15.
  * This record reader takes a single book as input.
- * Output key is the word
+ * Output key is the current line
  * Output value is book title
  */
 public class SingleBookReader extends RecordReader<Text, Text> {
 
     private LineReader lineReader;
-    private Text word; //key
+    private Text currentLine = new Text(""); //key
     private Text title; //value
 
     private long start;
@@ -30,16 +30,16 @@ public class SingleBookReader extends RecordReader<Text, Text> {
     private long currentPos;
 
     private String filename;
-    private Text currentLine = new Text("");
 
     private boolean hasTitle;
     private boolean hasStart;
 
+    private Configuration configuration;
     @Override
     public void initialize(InputSplit inputSplit, TaskAttemptContext context) throws IOException, InterruptedException {
 
         FileSplit split = (FileSplit) inputSplit;
-        Configuration configuration = context.getConfiguration();
+        configuration = context.getConfiguration();
         Path path = split.getPath();
         filename = path.getName();
         FileSystem fileSystem = path.getFileSystem(configuration);
@@ -119,19 +119,32 @@ public class SingleBookReader extends RecordReader<Text, Text> {
 
     @Override
     public boolean nextKeyValue() throws IOException, InterruptedException {
+
         if (filename.endsWith("txt")) {//only process txt file
             return false;
         }
-        if (currentPos > end || !hasStart || !hasTitle) {
+
+        if (currentPos > end || !hasStart || !hasTitle) {//false if finishes processing the file
             return false;
         }
 
-        return false;
+        //read next line
+        int readBytes = lineReader.readLine(currentLine);
+        currentPos += readBytes;
+
+        if (currentLine.toString().startsWith("End of Project Gutenberg")) {
+            int totalCount = configuration.getInt("Total_Book_Count", 0);
+            totalCount++;
+            configuration.setInt("Total_Book_Count", totalCount);
+            return false;
+        }
+
+        return true;
     }
 
     @Override
     public Text getCurrentKey() throws IOException, InterruptedException {
-        return word;
+        return currentLine;
     }
 
     @Override

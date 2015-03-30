@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  * Created by Qiu on 3/18/15.
  * This reader reads records from combine books input format
- * Output key is the word
+ * Output key is the current line
  * Output value is book title
  */
 

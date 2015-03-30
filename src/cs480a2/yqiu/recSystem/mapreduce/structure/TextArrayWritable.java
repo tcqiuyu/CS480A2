@@ -7,27 +7,34 @@ import org.apache.hadoop.io.Writable;
 
 /**
  * Created by Qiu on 3/18/15.
- * The generic int array writable class
+ * The text array writable class
  */
 
-public abstract class TextArrayWritable extends ArrayWritable {
+public class TextArrayWritable extends ArrayWritable {
 
     private Writable[] values;
 
-    public TextArrayWritable(String[] textArray) {
-        super(IntWritable.class);
-        values = new Writable[textArray.length];
-        initValues(textArray);
+    public TextArrayWritable() {
+        super(Text.class);
     }
 
-    public void initValues(String[] textArray) {
-        for (int i = 0; i < textArray.length; i++) {
-            Writable text = new Text(textArray[i]);
+    public TextArrayWritable(String[] strArray) {
+        super(Text.class);
+        values = new Writable[strArray.length];
+
+        //convert string to text
+        for (int i = 0; i < strArray.length; i++) {
+            Writable text = new Text(strArray[i]);
             values[i] = text;
         }
+
+        set(values);
     }
 
-    public Writable[] getValues() {
-        return values;
+    public TextArrayWritable(Text[] textArray) {
+        super(Text.class);
+        values = new Writable[textArray.length];
+        set(values);
     }
+
 }

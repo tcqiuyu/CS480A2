@@ -133,9 +133,9 @@ public class SingleBookReader extends RecordReader<Text, Text> {
         currentPos += readBytes;
 
         if (currentLine.toString().startsWith("End of Project Gutenberg")) {
-            int totalCount = configuration.getInt("Total_Book_Count", 0);
+            double totalCount = configuration.getDouble("Total_Book_Count", 0);
             totalCount++;
-            configuration.setInt("Total_Book_Count", totalCount);
+            configuration.setDouble("Total_Book_Count", totalCount);
             return false;
         }
 

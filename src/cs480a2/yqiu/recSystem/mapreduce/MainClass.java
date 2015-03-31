@@ -1,11 +1,14 @@
 package cs480a2.yqiu.recSystem.mapreduce;
 
 import cs480a2.yqiu.recSystem.mapreduce.input.CombineBooksInputFormat;
+import cs480a2.yqiu.recSystem.mapreduce.structure.TextArrayWritable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 import java.io.IOException;
 
@@ -16,12 +19,12 @@ import java.io.IOException;
 
 public class MainClass {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
         Configuration configuration = new Configuration();
         Job job = Job.getInstance(configuration, "TF-IDF");
 
         //store an variable to store total books
-        configuration.setInt("Total_Book_Count", 0);
+        configuration.setDouble("Total_Book_Count", 0);
 
         //set main class
         job.setJarByClass(MainClass.class);
@@ -43,6 +46,10 @@ public class MainClass {
         //set output path
         FileOutputFormat.setOutputPath(job, new Path(args[args.length - 1]));
 
+        job.setOutputFormatClass(TextOutputFormat.class);
+        job.setOutputKeyClass(TextArrayWritable.class);
+        job.setOutputValueClass(DoubleWritable.class);
+        System.exit(job.waitForCompletion(true) ? 0 : 1);
 
 
     }

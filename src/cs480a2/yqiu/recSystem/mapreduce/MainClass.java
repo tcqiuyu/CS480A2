@@ -52,7 +52,7 @@ public class MainClass {
         job.setMapOutputValueClass(TextArrayWritable.class);
 
         job.setOutputFormatClass(TextOutputFormat.class);
-        job.setOutputKeyClass(TextArrayWritable.class);
+        job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(DoubleWritable.class);
 
         System.exit(job.waitForCompletion(true) ? 0 : 1);

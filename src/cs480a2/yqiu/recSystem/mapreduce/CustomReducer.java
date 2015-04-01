@@ -16,7 +16,7 @@ import java.io.IOException;
  * Output value: DoubleWritable ---> TF-IDF Value
  */
 
-public class CustomReducer extends Reducer<Text, TextArrayWritable, TextArrayWritable, DoubleWritable> {
+public class CustomReducer extends Reducer<Text, TextArrayWritable, Text, DoubleWritable> {
 
     @Override
     public void reduce(Text key, Iterable<TextArrayWritable> values, Context context) throws IOException, InterruptedException {
@@ -39,7 +39,9 @@ public class CustomReducer extends Reducer<Text, TextArrayWritable, TextArrayWri
             Double idf = Math.log(totalBookCount / bookOccurCount) / Math.log(2);
             DoubleWritable tfidf = new DoubleWritable(tf / idf);
 
-            TextArrayWritable outputKey = new TextArrayWritable(new Text[]{title, key});
+//            TextArrayWritable outputKey = new TextArrayWritable(new Text[]{title, key});
+            String output = title.toString() + " " + key.toString();
+            Text outputKey = new Text(output);
             context.write(outputKey, tfidf);
         }
     }

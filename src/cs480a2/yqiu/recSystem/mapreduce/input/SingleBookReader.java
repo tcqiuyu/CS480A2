@@ -99,6 +99,7 @@ public class SingleBookReader extends RecordReader<Text, Text> {
             }
         }
 
+        currentPos = start;
     }
 
     private boolean containsTitle(Text line) throws IOException {

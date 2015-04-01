@@ -108,7 +108,6 @@ public class SingleBookReader extends RecordReader<Text, Text> {
         if (lineString.startsWith("Title")) {
             String titleString = lineString.split(":")[1].substring(1);
             title = new Text(titleString);
-//            throw new IOException("Current line " + line);
             return true;
         } else {
             return false;
@@ -140,9 +139,9 @@ public class SingleBookReader extends RecordReader<Text, Text> {
             totalCount++;
             configuration.setDouble("Total_Book_Count", totalCount);
             if (totalCount == 3) {
-                throw new IOException("Title: " + title + "------------ Total Count: " + totalCount);
             }
-            return false;
+            throw new IOException("Title: " + title + "------------ current line: " + currentLine);
+//            return false;
         }
 
         return true;

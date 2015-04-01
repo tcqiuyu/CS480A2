@@ -40,7 +40,7 @@ public class CustomReducer extends Reducer<Text, TextArrayWritable, Text, Double
             DoubleWritable tfidf = new DoubleWritable(tf / idf);
 
 //            TextArrayWritable outputKey = new TextArrayWritable(new Text[]{title, key});
-            String output = title.toString() + " " + key.toString();
+            String output = title.toString() + ":" + key.toString();
             Text outputKey = new Text(output);
             context.write(outputKey, tfidf);
         }

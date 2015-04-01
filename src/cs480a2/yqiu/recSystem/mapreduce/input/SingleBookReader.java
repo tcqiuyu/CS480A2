@@ -138,10 +138,10 @@ public class SingleBookReader extends RecordReader<Text, Text> {
             double totalCount = configuration.getDouble("Total_Book_Count", 0);
             totalCount++;
             configuration.setDouble("Total_Book_Count", totalCount);
-            if (totalCount == 3) {
+            if (title.toString().startsWith("peter")) {
+                throw new IOException("Title: " + title + "------------ current line: " + currentLine);
             }
-            throw new IOException("Title: " + title + "------------ current line: " + currentLine);
-//            return false;
+            return false;
         }
 
         return true;

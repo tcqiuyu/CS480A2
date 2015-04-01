@@ -21,7 +21,6 @@ public class CustomMapper extends Mapper<Text, Text, Text, TextArrayWritable> {
     private Context context;
 
     private Text title;
-    private TextArrayWritable outputVal = new TextArrayWritable();
 
 
     @Override
@@ -44,7 +43,8 @@ public class CustomMapper extends Mapper<Text, Text, Text, TextArrayWritable> {
             if (isWord(word)) {
                 Text wordText = new Text(word);
                 Text[] textArray = {wordText, one, one};
-                outputVal.set(textArray);
+                TextArrayWritable outputVal = new TextArrayWritable(textArray);
+//                outputVal.set(textArray);
                 context.write(title, outputVal);
 
             }

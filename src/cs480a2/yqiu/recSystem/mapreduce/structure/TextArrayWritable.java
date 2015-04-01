@@ -1,7 +1,6 @@
 package cs480a2.yqiu.recSystem.mapreduce.structure;
 
 import org.apache.hadoop.io.ArrayWritable;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 

@@ -39,7 +39,7 @@ public class CustomMapper extends Mapper<Text, Text, Text, TextArrayWritable> {
             //replace all non-alphanumeric char
             word = word.trim().replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
 
-            if (isWord(word) && word.equals("")) {
+            if (isWord(word) && !word.equals("")) {
                 Text wordText = new Text(word);
                 Text[] textArray = {wordText, one, one};
                 TextArrayWritable outputVal = new TextArrayWritable(textArray);

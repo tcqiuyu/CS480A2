@@ -56,8 +56,9 @@ public class SingleBookReader extends RecordReader<Text, Text> {
         }
 
         start += lineReader.readLine(currentLine);
+        throw new IOException("Current line "+currentLine);
 
-        prepareToScanBook();
+//        prepareToScanBook();
     }
 
     private void prepareToScanBook() {
@@ -138,9 +139,8 @@ public class SingleBookReader extends RecordReader<Text, Text> {
             configuration.setDouble("Total_Book_Count", totalCount);
             return false;
         }
-        throw new IOException("Current line "+currentLine);
 
-//        return true;
+        return true;
     }
 
     @Override

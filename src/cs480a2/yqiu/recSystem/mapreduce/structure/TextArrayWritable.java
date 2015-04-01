@@ -27,10 +27,10 @@ public class TextArrayWritable extends ArrayWritable {
         String string = "";
         for (Text value : values) {
             String tmp = value.toString();
-            string = string.concat(tmp);
+            string = string.concat(tmp + " ");
         }
 
-        return string;
+        return string.substring(0, string.length() - 1);
     }
 
     //

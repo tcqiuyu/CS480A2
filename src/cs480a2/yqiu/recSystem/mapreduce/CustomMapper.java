@@ -39,12 +39,12 @@ public class CustomMapper extends Mapper<Text, Text, Text, TextArrayWritable> {
             //replace all non-alphanumeric char
             word = word.trim().replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
 
-            if (isWord(word)) {
+            if (isWord(word) && word.equals("")) {
                 Text wordText = new Text(word);
                 Text[] textArray = {wordText, one, one};
                 TextArrayWritable outputVal = new TextArrayWritable(textArray);
 //                System.out.println("Key: " + title + "------------ Value: " + outputVal);
-                throw new IOException("Key: " + title + "------------ Value: " + outputVal.toString());
+                throw new IOException("Key: " + title + "------------ Value: " + outputVal.get()[0].toString());
 //                context.write(title, outputVal);
 
             }

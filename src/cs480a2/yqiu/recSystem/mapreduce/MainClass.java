@@ -5,7 +5,6 @@ import cs480a2.yqiu.recSystem.mapreduce.structure.TextArrayWritable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.DoubleWritable;
-import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
@@ -43,7 +42,6 @@ public class MainClass {
         FileInputFormat.setInputPaths(job, new Path(args[args.length - 2]));
         FileInputFormat.setInputDirRecursive(job, true);
         job.setInputFormatClass(CombineBooksInputFormat.class);
-        job.setSortComparatorClass(Text.Comparator.class);
 
         //set output path
         FileOutputFormat.setOutputPath(job, new Path(args[args.length - 1]));
@@ -51,7 +49,6 @@ public class MainClass {
         job.setOutputFormatClass(TextOutputFormat.class);
         job.setOutputKeyClass(TextArrayWritable.class);
         job.setOutputValueClass(DoubleWritable.class);
-
         System.exit(job.waitForCompletion(true) ? 0 : 1);
 
 

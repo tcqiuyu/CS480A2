@@ -5,6 +5,7 @@ import cs480a2.yqiu.recSystem.mapreduce.structure.TextArrayWritable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.DoubleWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
@@ -34,6 +35,7 @@ public class MainClass {
         job.setCombinerClass(CustomCombiner.class);
         job.setReducerClass(CustomReducer.class);
 
+
         //set the combine file size to maximum 64MB
         job.getConfiguration().setLong("mapreduce.input.fileinputformat.split.maxsize", (long) (64 * 1024 * 1024));
         job.getConfiguration().setLong("mapreduce.input.fileinputformat.split.minsize.per.node", 0);
@@ -49,6 +51,8 @@ public class MainClass {
         job.setOutputFormatClass(TextOutputFormat.class);
         job.setOutputKeyClass(TextArrayWritable.class);
         job.setOutputValueClass(DoubleWritable.class);
+
+        job.setSortComparatorClass(Text.Comparator.class);
         System.exit(job.waitForCompletion(true) ? 0 : 1);
 
 

@@ -120,7 +120,7 @@ public class SingleBookReader extends RecordReader<Text, Text> {
     @Override
     public boolean nextKeyValue() throws IOException, InterruptedException {
 
-        if (filename.endsWith("txt")) {//only process txt file
+        if (!filename.endsWith("txt")) {//only process txt file
             return false;
         }
 
@@ -136,8 +136,8 @@ public class SingleBookReader extends RecordReader<Text, Text> {
             double totalCount = configuration.getDouble("Total_Book_Count", 0);
             totalCount++;
             configuration.setDouble("Total_Book_Count", totalCount);
-//            return false;
-            throw new IOException("Current line "+currentLine);
+            return false;
+//            throw new IOException("Current line "+currentLine);
         }
 
         return true;

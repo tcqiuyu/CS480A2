@@ -29,7 +29,7 @@ public class CustomMapper extends Mapper<Text, Text, Text, TextArrayWritable> {
         this.title = value;
 //        throw new IOException("Key: " + entry.getKey() + "------------ Value: " + outVal);
 
-        processSentence(currentSentence);
+//        processSentence(currentSentence);
         throw new IOException("CurrentSentence: " + currentSentence);
     }
 

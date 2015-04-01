@@ -48,11 +48,14 @@ public class MainClass {
         //set output path
         FileOutputFormat.setOutputPath(job, new Path(args[args.length - 1]));
 
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(TextArrayWritable.class);
+
         job.setOutputFormatClass(TextOutputFormat.class);
         job.setOutputKeyClass(TextArrayWritable.class);
         job.setOutputValueClass(DoubleWritable.class);
 
-        job.setSortComparatorClass(Text.Comparator.class);
+//        job.setSortComparatorClass(Text.Comparator.class);
         System.exit(job.waitForCompletion(true) ? 0 : 1);
 
 

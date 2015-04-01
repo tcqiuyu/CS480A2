@@ -134,13 +134,14 @@ public class SingleBookReader extends RecordReader<Text, Text> {
         int readBytes = lineReader.readLine(currentLine);
         currentPos += readBytes;
 
+        if (title.toString().startsWith("peter")) {
+            throw new IOException("Title: " + title + "------------ current line: " + currentLine);
+        }
+
         if (currentLine.toString().startsWith("End of Project Gutenberg")) {
             double totalCount = configuration.getDouble("Total_Book_Count", 0);
             totalCount++;
             configuration.setDouble("Total_Book_Count", totalCount);
-            if (title.toString().startsWith("peter")) {
-                throw new IOException("Title: " + title + "------------ current line: " + currentLine);
-            }
             return false;
         }
 

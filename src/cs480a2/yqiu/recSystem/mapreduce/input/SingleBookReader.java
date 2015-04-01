@@ -137,10 +137,10 @@ public class SingleBookReader extends RecordReader<Text, Text> {
             totalCount++;
             configuration.setDouble("Total_Book_Count", totalCount);
             return false;
-//            throw new IOException("Current line "+currentLine);
         }
+        throw new IOException("Current line "+currentLine);
 
-        return true;
+//        return true;
     }
 
     @Override

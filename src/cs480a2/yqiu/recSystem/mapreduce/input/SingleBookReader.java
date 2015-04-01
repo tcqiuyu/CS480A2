@@ -31,10 +31,11 @@ public class SingleBookReader extends RecordReader<Text, Text> {
 
     private String filename;
 
-    private boolean hasTitle;
-    private boolean hasStart;
+    private boolean hasTitle = true;
+    private boolean hasStart = true;
 
     private Configuration configuration;
+
     @Override
     public void initialize(InputSplit inputSplit, TaskAttemptContext context) throws IOException, InterruptedException {
 
@@ -106,8 +107,8 @@ public class SingleBookReader extends RecordReader<Text, Text> {
         if (lineString.startsWith("Title")) {
             String titleString = lineString.split(":")[1].substring(1);
             title = new Text(titleString);
-            throw new IOException("Current line "+line);
-//            return true;
+//            throw new IOException("Current line " + line);
+            return true;
         } else {
             return false;
         }

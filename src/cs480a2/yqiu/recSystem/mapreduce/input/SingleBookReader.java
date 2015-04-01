@@ -141,7 +141,7 @@ public class SingleBookReader extends RecordReader<Text, Text> {
             if (totalCount == 3) {
                 throw new IOException("Title: " + title + "------------ Total Count: " + totalCount);
             }
-//            return false;
+            return false;
         }
 
         return true;

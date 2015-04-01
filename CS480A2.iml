@@ -8,7 +8,9 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="hadoop-annotations" />
+    <orderEntry type="module" module-name="hadoop-archives" />
     <orderEntry type="module" module-name="hadoop-assemblies" />
+    <orderEntry type="module" module-name="hadoop-auth" />
     <orderEntry type="module" module-name="hadoop-auth-examples" />
     <orderEntry type="module" module-name="hadoop-azure" />
     <orderEntry type="module" module-name="hadoop-client" />
@@ -30,6 +32,7 @@
     <orderEntry type="module" module-name="hadoop-mapreduce-client" />
     <orderEntry type="module" module-name="hadoop-mapreduce-client-app" />
     <orderEntry type="module" module-name="hadoop-mapreduce-client-common" />
+    <orderEntry type="module" module-name="hadoop-mapreduce-client-core" />
     <orderEntry type="module" module-name="hadoop-mapreduce-client-hs" />
     <orderEntry type="module" module-name="hadoop-mapreduce-client-hs-plugins" />
     <orderEntry type="module" module-name="hadoop-mapreduce-client-jobclient" />
@@ -64,7 +67,6 @@
     <orderEntry type="module" module-name="hadoop-yarn-server-tests" />
     <orderEntry type="module" module-name="hadoop-yarn-server-web-proxy" />
     <orderEntry type="module" module-name="hadoop-yarn-site" />
-    <orderEntry type="module" module-name="hadoop-mapreduce-client-core" />
   </component>
   <component name="org.twodividedbyzero.idea.findbugs">
     <option name="_basePreferences">

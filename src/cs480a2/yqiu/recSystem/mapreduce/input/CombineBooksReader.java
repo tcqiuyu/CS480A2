@@ -35,6 +35,10 @@ public class CombineBooksReader extends RecordReader<Text, Text> {
         FileSplit fileSplit = new FileSplit(combineFileSplit.getPath(index),
                 combineFileSplit.getOffset(index), combineFileSplit.getLength(), combineFileSplit.getLocations());
         bookReader.initialize(fileSplit, context);
+
+        if (index > 1) {
+            throw (new IOException(combineFileSplit.getPath(index).getName()));
+        }
     }
 
     @Override

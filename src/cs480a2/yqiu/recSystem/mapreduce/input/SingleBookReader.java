@@ -138,7 +138,9 @@ public class SingleBookReader extends RecordReader<Text, Text> {
             double totalCount = configuration.getDouble("Total_Book_Count", 0);
             totalCount++;
             configuration.setDouble("Total_Book_Count", totalCount);
-            throw new IOException("Title: " + title + "------------ Total Count: " + totalCount);
+            if (totalCount == 3) {
+                throw new IOException("Title: " + title + "------------ Total Count: " + totalCount);
+            }
 //            return false;
         }
 

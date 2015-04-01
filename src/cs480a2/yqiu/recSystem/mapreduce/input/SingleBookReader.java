@@ -82,7 +82,7 @@ public class SingleBookReader extends RecordReader<Text, Text> {
         }
 
         //get book start line
-        while (isBookStart(currentLine)) {
+        while (!isBookStart(currentLine)) {
             try {
                 int readBytes = lineReader.readLine(currentLine);
                 //if does not find book start line, return

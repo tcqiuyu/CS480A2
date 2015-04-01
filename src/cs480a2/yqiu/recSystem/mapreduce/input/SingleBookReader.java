@@ -56,12 +56,11 @@ public class SingleBookReader extends RecordReader<Text, Text> {
         }
 
         start += lineReader.readLine(currentLine);
-        throw new IOException("Current line "+currentLine);
 
-//        prepareToScanBook();
+        prepareToScanBook();
     }
 
-    private void prepareToScanBook() {
+    private void prepareToScanBook() throws IOException {
         //get the title of the book
         while (!containsTitle(currentLine)) {
             try {
@@ -101,13 +100,14 @@ public class SingleBookReader extends RecordReader<Text, Text> {
 
     }
 
-    private boolean containsTitle(Text line) {
+    private boolean containsTitle(Text line) throws IOException {
         String lineString = line.toString();
 
         if (lineString.startsWith("Title")) {
             String titleString = lineString.split(":")[1].substring(1);
             title = new Text(titleString);
-            return true;
+            throw new IOException("Current line "+line);
+//            return true;
         } else {
             return false;
         }

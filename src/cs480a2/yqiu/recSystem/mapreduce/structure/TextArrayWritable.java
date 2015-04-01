@@ -2,14 +2,13 @@ package cs480a2.yqiu.recSystem.mapreduce.structure;
 
 import org.apache.hadoop.io.ArrayWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.io.WritableComparable;
 
 /**
  * Created by Qiu on 3/18/15.
  * The text array writable class
  */
 
-public class TextArrayWritable extends ArrayWritable{
+public class TextArrayWritable extends ArrayWritable {
     //
 //    private Writable[] values;
 //
@@ -19,6 +18,19 @@ public class TextArrayWritable extends ArrayWritable{
 
     public TextArrayWritable(Text[] textArray) {
         super(Text.class, textArray);
+    }
+
+    @Override
+    public String toString() {
+        Text[] values = (Text[]) get();
+
+        String string = "";
+        for (Text value : values) {
+            String tmp = value.toString();
+            string = string.concat(tmp);
+        }
+
+        return string;
     }
 
     //

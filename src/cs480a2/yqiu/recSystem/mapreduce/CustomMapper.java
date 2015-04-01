@@ -29,7 +29,7 @@ public class CustomMapper extends Mapper<Text, Text, Text, TextArrayWritable> {
         this.title = value;
 //        throw new IOException("Key: " + entry.getKey() + "------------ Value: " + outVal);
 
-//        processSentence(currentSentence);
+        processSentence(currentSentence);
     }
 
     private void processSentence(Text sentence) throws IOException, InterruptedException {
@@ -45,7 +45,6 @@ public class CustomMapper extends Mapper<Text, Text, Text, TextArrayWritable> {
                 Text wordText = new Text(word);
                 Text[] textArray = {wordText, one, one};
                 TextArrayWritable outputVal = new TextArrayWritable(textArray);
-//                outputVal.set(textArray);
                 context.write(title, outputVal);
 
             }

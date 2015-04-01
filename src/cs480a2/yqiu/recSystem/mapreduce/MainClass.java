@@ -55,7 +55,6 @@ public class MainClass {
         job.setOutputKeyClass(TextArrayWritable.class);
         job.setOutputValueClass(DoubleWritable.class);
 
-//        job.setSortComparatorClass(Text.Comparator.class);
         System.exit(job.waitForCompletion(true) ? 0 : 1);
 
 

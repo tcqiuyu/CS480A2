@@ -30,7 +30,6 @@ public class CustomMapper extends Mapper<Text, Text, Text, TextArrayWritable> {
 //        throw new IOException("Key: " + entry.getKey() + "------------ Value: " + outVal);
 
 //        processSentence(currentSentence);
-        throw new IOException("CurrentSentence: " + currentSentence);
     }
 
     private void processSentence(Text sentence) throws IOException, InterruptedException {

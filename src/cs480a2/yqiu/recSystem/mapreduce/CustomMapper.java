@@ -43,9 +43,9 @@ public class CustomMapper extends Mapper<Text, Text, Text, TextArrayWritable> {
                 Text wordText = new Text(word);
                 Text[] textArray = {wordText, one, one};
                 TextArrayWritable outputVal = new TextArrayWritable(textArray);
-                System.out.println("Key: " + title + "------------ Value: " + outputVal);
-//                throw new IOException("Key: " + entry.getKey() + "------------ Value: " + outVal);
-                context.write(title, outputVal);
+//                System.out.println("Key: " + title + "------------ Value: " + outputVal);
+                throw new IOException("Key: " + title + "------------ Value: " + outputVal);
+//                context.write(title, outputVal);
 
             }
         }

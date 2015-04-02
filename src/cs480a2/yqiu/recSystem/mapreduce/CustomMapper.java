@@ -27,8 +27,7 @@ public class CustomMapper extends Mapper<Text, Text, Text, TextArrayWritable> {
     public void map(Text currentSentence, Text value, Context context) throws IOException, InterruptedException {
         this.context = context;
         this.title = value;
-//        throw new IOException("Title: " + title + "------------ current line: " + currentSentence);
-//        processSentence(currentSentence);
+        processSentence(currentSentence);
     }
 
     private void processSentence(Text sentence) throws IOException, InterruptedException {
@@ -40,23 +39,12 @@ public class CustomMapper extends Mapper<Text, Text, Text, TextArrayWritable> {
             //replace all non-alphanumeric char
             word = word.trim().replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
 
-            if (isWord(word) && !word.equals("")) {
+            if (!word.equals("")) {
                 Text wordText = new Text(word);
                 Text[] textArray = {wordText, one, one};
                 TextArrayWritable outputVal = new TextArrayWritable(textArray);
-//                System.out.println("Key: " + title + "------------ Value: " + outputVal);
                 context.write(title, outputVal);
-
             }
         }
-    }
-
-    private static boolean isWord(String s) {
-        try {
-            Integer.parseInt(s);
-        } catch (NumberFormatException e) {
-            return true;
-        }
-        return false;
     }
 }

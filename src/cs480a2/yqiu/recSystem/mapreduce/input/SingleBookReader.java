@@ -36,6 +36,9 @@ public class SingleBookReader extends RecordReader<Text, Text> {
 
     private Configuration configuration;
 
+    public SingleBookReader() {
+    }
+
     @Override
     public void initialize(InputSplit inputSplit, TaskAttemptContext context) throws IOException, InterruptedException {
 
@@ -126,7 +129,7 @@ public class SingleBookReader extends RecordReader<Text, Text> {
             return false;
         }
 
-        if (currentPos > end || !hasStart || !hasTitle) {//false if finishes processing the file
+        if (currentPos >= end || !hasStart || !hasTitle) {//false if finishes processing the file
             return false;
         }
 
@@ -134,18 +137,17 @@ public class SingleBookReader extends RecordReader<Text, Text> {
         int readBytes = lineReader.readLine(currentLine);
         currentPos += readBytes;
 
-        if (title.toString().startsWith("peter")) {
-            throw new IOException("Title: " + title + "------------ current line: " + currentLine);
-        }
 
-        if (currentLine.toString().startsWith("End of Project Gutenberg")) {
-            double totalCount = configuration.getDouble("Total_Book_Count", 0);
+        if (currentLine.toString().contains("End of") && currentLine.toString().contains("Project Gutenberg")) {//if reached book end, return false
+            double totalCount = configuration.getDouble("Total.Book.Count", 0);
             totalCount++;
-            configuration.setDouble("Total_Book_Count", totalCount);
-            return false;
-        }
 
-        return true;
+            configuration.setDouble("Total.Book.Count", totalCount);
+            return false;
+
+        } else {
+            return true;
+        }
     }
 
     @Override

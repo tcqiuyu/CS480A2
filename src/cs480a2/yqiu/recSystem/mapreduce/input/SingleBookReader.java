@@ -129,7 +129,7 @@ public class SingleBookReader extends RecordReader<Text, Text> {
             return false;
         }
 
-        if (currentPos >= end || !hasStart || !hasTitle) {//false if finishes processing the file
+        if (currentPos >= end ) {//false if finishes processing the file
             return false;
         }
 
@@ -143,10 +143,12 @@ public class SingleBookReader extends RecordReader<Text, Text> {
             totalCount++;
 
             configuration.setDouble("Total.Book.Count", totalCount);
-            return false;
+            throw new IOException("currentPos: " + currentPos + " --- end: " + end);
+//            return false;
+
 
         } else {
-            return true;
+        return true;
         }
     }
 

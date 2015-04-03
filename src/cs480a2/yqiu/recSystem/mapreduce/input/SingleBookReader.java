@@ -129,7 +129,7 @@ public class SingleBookReader extends RecordReader<Text, Text> {
             return false;
         }
 
-        if (currentPos >= end) {//false if finishes processing the file
+        if (currentPos >= end) {//false if finishes processing the split
             return false;
         }
 
@@ -137,7 +137,7 @@ public class SingleBookReader extends RecordReader<Text, Text> {
         int readBytes = lineReader.readLine(currentLine);
         currentPos += readBytes;
 
-        if (readBytes == 0) {
+        if (readBytes == 0) {//if cannot read anymore, return false
             return false;
         }
 
@@ -147,12 +147,9 @@ public class SingleBookReader extends RecordReader<Text, Text> {
 
             configuration.setDouble("Total.Book.Count", totalCount);
 //            throw new IOException("currentPos: " + currentPos + " --- end: " + end);
-//            return false;
-            return true;
-
-        } else {
-            return true;
+            return false;
         }
+        return true;
     }
 
     @Override

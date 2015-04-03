@@ -28,7 +28,6 @@ public class CustomCombiner extends Reducer<Text, TextArrayWritable, Text, TextA
 
         //compute word count and store them in a map
         for (TextArrayWritable val : values) {
-            //REVIEW: not sure about this casting
             //get word
             Text word = (Text) val.get()[0];
             //update the specific word count
@@ -50,7 +49,7 @@ public class CustomCombiner extends Reducer<Text, TextArrayWritable, Text, TextA
             //output value
             TextArrayWritable outVal = new TextArrayWritable(new Text[]{title, wordCount, maxWordCountText});
             context.write(entry.getKey(), outVal);
-
+            throw new IOException("Total book count: " + context.getConfiguration().getDouble("Total.Book.Count", 0));
         }
     }
 

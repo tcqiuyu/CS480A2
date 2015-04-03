@@ -137,9 +137,6 @@ public class SingleBookReader extends RecordReader<Text, Text> {
         int readBytes = lineReader.readLine(currentLine);
         currentPos += readBytes;
 
-//        if (readBytes == 0) {//if cannot read anymore, return false
-//            return false;
-//        }
 
         if (currentLine.toString().contains("End of") && currentLine.toString().contains("Project Gutenberg")) {//if reached book end, return false
             double totalCount = configuration.getDouble("Total.Book.Count", 0);
@@ -147,6 +144,9 @@ public class SingleBookReader extends RecordReader<Text, Text> {
 
             configuration.setDouble("Total.Book.Count", totalCount);
 //            throw new IOException("currentPos: " + currentPos + " --- end: " + end);
+            return false;
+        }
+        if (readBytes == 0) {//if cannot read anymore, return false
             return false;
         }
         return true;

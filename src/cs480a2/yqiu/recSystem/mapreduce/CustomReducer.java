@@ -6,10 +6,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 
 /**
  * Created by Qiu on 3/18/15.
@@ -46,7 +43,7 @@ public class CustomReducer extends Reducer<Text, TextArrayWritable, Text, Text> 
         double bookOccurCount = map.size();
 
 //        Iterator<TextArrayWritable> iterator = values.iterator();
-        for (TextArrayWritable val : values) {
+        for (TextArrayWritable val : map.keySet()) {
             Text title = (Text) val.get()[0];
             Double wordCount = Double.parseDouble(val.get()[1].toString());
             Double maxWordCount = Double.parseDouble(val.get()[2].toString());
@@ -58,7 +55,7 @@ public class CustomReducer extends Reducer<Text, TextArrayWritable, Text, Text> 
             String output = title.toString() + ":" + key.toString();
             Text outputKey = new Text(output);
             context.write(key, new Text(val.toString()));
+            throw new IOException("Key: " + key + " --- Val: " + val + "--- Vals: " + map.keySet().size());
         }
-        throw new IOException("Key: " + key + " --- Val: " + values.iterator().next().toString()+ "--- Vals: " + values.iterator().hasNext());
     }
 }

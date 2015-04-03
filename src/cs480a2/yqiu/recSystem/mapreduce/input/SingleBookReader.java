@@ -119,7 +119,7 @@ public class SingleBookReader extends RecordReader<Text, Text> {
 
     private boolean isBookStart(Text line) {
         String lineString = line.toString();
-        return lineString.startsWith("*** START OF THIS PROJECT");
+        return lineString.contains("***") && lineString.contains("START") && lineString.contains("Gutenberg");
     }
 
     @Override

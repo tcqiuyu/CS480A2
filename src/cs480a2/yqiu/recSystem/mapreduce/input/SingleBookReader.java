@@ -129,7 +129,7 @@ public class SingleBookReader extends RecordReader<Text, Text> {
             return false;
         }
 
-        if (currentPos >= end) {//false if finishes processing the split
+        if (currentPos >= end || !hasTitle || !hasStart) {//false if finishes processing the split
             return false;
         }
 

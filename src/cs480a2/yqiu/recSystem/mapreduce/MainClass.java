@@ -23,10 +23,10 @@ public class MainClass {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
         Configuration configuration = new Configuration();
+        //store an variable of total books count
         configuration.setDouble("Total.Book.Count", 0);
         Job job = Job.getInstance(configuration, "TF-IDF");
 
-        //store an variable of total books count
 
         //set main class
         job.setJarByClass(MainClass.class);

@@ -53,7 +53,7 @@ public class MainClass {
 
         job.setOutputFormatClass(TextOutputFormat.class);
         job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(DoubleWritable.class);
+        job.setOutputValueClass(Text.class);
 
         System.exit(job.waitForCompletion(true) ? 0 : 1);
 

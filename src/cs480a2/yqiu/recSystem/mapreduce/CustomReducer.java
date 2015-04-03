@@ -20,7 +20,7 @@ import java.util.LinkedList;
  * Output value: DoubleWritable ---> TF-IDF Value
  */
 
-public class CustomReducer extends Reducer<Text, TextArrayWritable, Text, DoubleWritable> {
+public class CustomReducer extends Reducer<Text, TextArrayWritable, Text, Text> {
 
     double totalBookCount;
 
@@ -46,7 +46,7 @@ public class CustomReducer extends Reducer<Text, TextArrayWritable, Text, Double
         double bookOccurCount = map.size();
 
 //        Iterator<TextArrayWritable> iterator = values.iterator();
-        for (TextArrayWritable val : map.keySet()) {
+        for (TextArrayWritable val : values) {
             Text title = (Text) val.get()[0];
             Double wordCount = Double.parseDouble(val.get()[1].toString());
             Double maxWordCount = Double.parseDouble(val.get()[2].toString());
@@ -57,7 +57,7 @@ public class CustomReducer extends Reducer<Text, TextArrayWritable, Text, Double
 
             String output = title.toString() + ":" + key.toString();
             Text outputKey = new Text(output);
-            context.write(outputKey, tfidf);
+            context.write(key, new Text(val.toString()));
         }
     }
 }

@@ -6,7 +6,9 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  * Created by Qiu on 3/18/15.
@@ -23,8 +25,9 @@ public class CustomReducer extends Reducer<Text, TextArrayWritable, Text, Double
 
     @Override
     protected void setup(Context context) throws IOException, InterruptedException {
-        totalBookCount = context.getConfiguration().getDouble("Total.Book.Count", 600);
-        throw new IOException("books:" + totalBookCount);
+//        totalBookCount = context.getConfiguration().getDouble("Total.Book.Count", 600);
+        totalBookCount = 600;
+//        throw new IOException("books:" + totalBookCount);
     }
 
 
@@ -38,7 +41,7 @@ public class CustomReducer extends Reducer<Text, TextArrayWritable, Text, Double
 
         double bookOccurCount = collection.size();
 
-        Iterator<TextArrayWritable> iterator = values.iterator();
+//        Iterator<TextArrayWritable> iterator = values.iterator();
         for (TextArrayWritable val : collection) {
             Text title = (Text) val.get()[0];
             Double wordCount = Double.parseDouble(val.get()[1].toString());

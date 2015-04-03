@@ -129,7 +129,7 @@ public class SingleBookReader extends RecordReader<Text, Text> {
             return false;
         }
 
-        if (currentPos >= end ) {//false if finishes processing the file
+        if (currentPos >= end) {//false if finishes processing the file
             return false;
         }
 
@@ -137,18 +137,21 @@ public class SingleBookReader extends RecordReader<Text, Text> {
         int readBytes = lineReader.readLine(currentLine);
         currentPos += readBytes;
 
+        if (readBytes == 0) {
+            return false;
+        }
 
         if (currentLine.toString().contains("End of") && currentLine.toString().contains("Project Gutenberg")) {//if reached book end, return false
             double totalCount = configuration.getDouble("Total.Book.Count", 0);
             totalCount++;
 
             configuration.setDouble("Total.Book.Count", totalCount);
-            throw new IOException("currentPos: " + currentPos + " --- end: " + end);
+//            throw new IOException("currentPos: " + currentPos + " --- end: " + end);
 //            return false;
-
+            return true;
 
         } else {
-        return true;
+            return true;
         }
     }
 

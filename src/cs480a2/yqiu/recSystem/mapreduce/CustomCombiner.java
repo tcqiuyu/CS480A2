@@ -49,7 +49,7 @@ public class CustomCombiner extends Reducer<Text, TextArrayWritable, Text, TextA
             //output value
             TextArrayWritable outVal = new TextArrayWritable(new Text[]{title, wordCount, maxWordCountText});
             context.write(entry.getKey(), outVal);
-            throw new IOException("Key: " + entry.getKey() + " --- val: " + outVal);
+//            throw new IOException("Key: " + entry.getKey() + " --- val: " + outVal);
         }
 
     }

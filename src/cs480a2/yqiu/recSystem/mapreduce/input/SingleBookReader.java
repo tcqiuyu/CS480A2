@@ -146,6 +146,8 @@ public class SingleBookReader extends RecordReader<Text, Text> {
 //            throw new IOException("currentPos: " + currentPos + " --- end: " + end);
             return false;
         }
+
+        //Cannot use this statement. Will result in empty output? Why?
 //        if (readBytes == 0) {//if cannot read anymore, return false
 //            return false;
 //        }

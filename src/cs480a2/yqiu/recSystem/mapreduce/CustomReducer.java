@@ -23,7 +23,7 @@ public class CustomReducer extends Reducer<Text, TextArrayWritable, Text, Double
 
     @Override
     protected void setup(Context context) throws IOException, InterruptedException {
-        totalBookCount = context.getConfiguration().getDouble("Total.Book.Count", 0);
+        totalBookCount = context.getConfiguration().getDouble("Total.Book.Count", 600);
 //        throw new IOException("books:" + totalBookCount);
     }
 

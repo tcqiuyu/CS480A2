@@ -25,31 +25,31 @@ public class CustomCombiner extends Reducer<Text, TextArrayWritable, Text, TextA
     protected void reduce(Text title, Iterable<TextArrayWritable> values, Context context) throws IOException, InterruptedException {
 
         CustomMap tempMap = new CustomMap();
-        throw new IOException("Total book count: " + context.getConfiguration().getDouble("Total.Book.Count", 0));
-//        //compute word count and store them in a map
-//        for (TextArrayWritable val : values) {
-//            //get word
-//            Text word = (Text) val.get()[0];
-//            //update the specific word count
-//            tempMap.increment(word, 1);
-//        }
-//
-//        /*
-//         * Wordset of the book
-//         * Key: word
-//         * Value: word count within the book
-//         */
-//        Set<Entry<Text, Integer>> entries = tempMap.entrySet();
-//
-//        Integer maxWordCount = Collections.max(tempMap.values());
-//        Text maxWordCountText = new Text(maxWordCount.toString());
-//
-//        for (Entry<Text, Integer> entry : entries) {
-//            Text wordCount = new Text(entry.getValue().toString());
-//            //output value
-//            TextArrayWritable outVal = new TextArrayWritable(new Text[]{title, wordCount, maxWordCountText});
-////            context.write(entry.getKey(), outVal);
-//        }
+//        throw new IOException("Total book count: " + context.getConfiguration().getDouble("Total.Book.Count", 0));
+        //compute word count and store them in a map
+        for (TextArrayWritable val : values) {
+            //get word
+            Text word = (Text) val.get()[0];
+            //update the specific word count
+            tempMap.increment(word, 1);
+        }
+
+        /*
+         * Wordset of the book
+         * Key: word
+         * Value: word count within the book
+         */
+        Set<Entry<Text, Integer>> entries = tempMap.entrySet();
+
+        Integer maxWordCount = Collections.max(tempMap.values());
+        Text maxWordCountText = new Text(maxWordCount.toString());
+
+        for (Entry<Text, Integer> entry : entries) {
+            Text wordCount = new Text(entry.getValue().toString());
+            //output value
+            TextArrayWritable outVal = new TextArrayWritable(new Text[]{title, wordCount, maxWordCountText});
+//            context.write(entry.getKey(), outVal);
+        }
     }
 
     private class CustomMap extends HashMap<Text, Integer> {

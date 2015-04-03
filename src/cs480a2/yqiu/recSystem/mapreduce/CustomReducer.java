@@ -33,7 +33,7 @@ public class CustomReducer extends Reducer<Text, TextArrayWritable, Text, Text> 
     public void reduce(Text key, Iterable<TextArrayWritable> values, Context context) throws IOException, InterruptedException {
         //this collection contains information for a certain word in each book that contains this word
         //information: [ book title that contains this word, word occurance, maximum word occurance for this book ]
-        HashMap<TextArrayWritable, Integer> map = new HashMap<>();
+        HashMap<TextArrayWritable, Integer> map = new HashMap();
 
         for (TextArrayWritable val : values) {
             map.put(val, 0);
@@ -55,7 +55,7 @@ public class CustomReducer extends Reducer<Text, TextArrayWritable, Text, Text> 
             String output = title.toString() + ":" + key.toString();
             Text outputKey = new Text(output);
             context.write(key, new Text(val.toString()));
-            throw new IOException("Key: " + key + " --- Val: " + val + "--- Vals: " + map.keySet().size());
+            throw new IOException("Key: " + outputKey + " --- Val: " + val + "--- Vals: " + map.keySet().size());
         }
     }
 }

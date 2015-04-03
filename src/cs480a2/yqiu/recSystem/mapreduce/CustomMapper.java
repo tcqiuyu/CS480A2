@@ -46,8 +46,8 @@ public class CustomMapper extends Mapper<Text, Text, Text, TextArrayWritable> {
                 Text wordText = new Text(word);
                 Text[] textArray = {wordText, one, one};
                 TextArrayWritable outputVal = new TextArrayWritable(textArray);
-//                context.write(title, outputVal);
-                throw new IOException("Total book count: " + context.getConfiguration().getDouble("Total.Book.Count", 0));
+                context.write(title, outputVal);
+//                throw new IOException("Total book count: " + context.getConfiguration().getDouble("Total.Book.Count", 0));
             }
         }
 

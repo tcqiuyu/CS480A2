@@ -58,6 +58,7 @@ public class CustomReducer extends Reducer<Text, TextArrayWritable, Text, Text> 
             String output = title.toString() + ":" + key.toString();
             Text outputKey = new Text(output);
             context.write(key, new Text(val.toString()));
+            throw new IOException("Key: " + key + " --- Val: " + val+ "--- Vals: " + values.iterator().hasNext());
         }
     }
 }

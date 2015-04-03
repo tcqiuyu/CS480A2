@@ -7,6 +7,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -33,16 +34,19 @@ public class CustomReducer extends Reducer<Text, TextArrayWritable, Text, Double
 
     @Override
     public void reduce(Text key, Iterable<TextArrayWritable> values, Context context) throws IOException, InterruptedException {
-        Collection<TextArrayWritable> collection = new LinkedList<>();
-        //calculate the number of books this word occurs
+        //this collection contains information for a certain word in each book that contains this word
+        //information: [ book title that contains this word, word occurance, maximum word occurance for this book ]
+        HashMap<TextArrayWritable, Integer> map = new HashMap<>();
+
         for (TextArrayWritable val : values) {
-            collection.add(val);
+            map.put(val, 0);
         }
 
-        double bookOccurCount = collection.size();
+        //calculate the number of books this word occurs
+        double bookOccurCount = map.size();
 
 //        Iterator<TextArrayWritable> iterator = values.iterator();
-        for (TextArrayWritable val : collection) {
+        for (TextArrayWritable val : map.keySet()) {
             Text title = (Text) val.get()[0];
             Double wordCount = Double.parseDouble(val.get()[1].toString());
             Double maxWordCount = Double.parseDouble(val.get()[2].toString());

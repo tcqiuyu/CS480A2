@@ -119,7 +119,7 @@ public class SingleBookReader extends RecordReader<Text, Text> {
 
     private boolean isBookStart(Text line) {
         String lineString = line.toString();
-        return lineString.contains("***") && lineString.toLowerCase().contains("start") && lineString.toLowerCase().contains("gutenberg");
+        return lineString.toLowerCase().contains("start") && lineString.toLowerCase().contains("gutenberg");
     }
 
     @Override
@@ -138,7 +138,7 @@ public class SingleBookReader extends RecordReader<Text, Text> {
         currentPos += readBytes;
 
 
-        if (currentLine.toString().toLowerCase().contains("end of") && currentLine.toString().toLowerCase().contains("project gutenberg")) {//if reached book end, return false
+        if (currentLine.toString().toLowerCase().contains("end") && currentLine.toString().toLowerCase().contains("gutenberg")) {//if reached book end, return false
             double totalCount = configuration.getDouble("Total.Book.Count", 0);
             totalCount++;
 

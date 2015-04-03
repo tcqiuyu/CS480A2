@@ -146,10 +146,8 @@ public class SingleBookReader extends RecordReader<Text, Text> {
 //            throw new IOException("currentPos: " + currentPos + " --- end: " + end);
             return false;
         }
-        if (readBytes == 0) {//if cannot read anymore, return false
-            return false;
-        }
-        return true;
+
+        return readBytes != 0;
     }
 
     @Override

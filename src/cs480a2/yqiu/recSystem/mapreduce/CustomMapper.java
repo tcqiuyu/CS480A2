@@ -27,9 +27,8 @@ public class CustomMapper extends Mapper<Text, Text, Text, TextArrayWritable> {
     public void map(Text currentSentence, Text value, Context context) throws IOException, InterruptedException {
         this.context = context;
         this.title = value;
-        throw new IOException("Total book count: " + context.getConfiguration().getDouble("Total.Book.Count", 0));
 
-//        processSentence(currentSentence);
+        processSentence(currentSentence);
     }
 
     private void processSentence(Text sentence) throws IOException, InterruptedException {

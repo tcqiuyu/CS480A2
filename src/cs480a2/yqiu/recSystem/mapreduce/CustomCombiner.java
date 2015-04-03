@@ -48,7 +48,7 @@ public class CustomCombiner extends Reducer<Text, TextArrayWritable, Text, TextA
             Text wordCount = new Text(entry.getValue().toString());
             //output value
             TextArrayWritable outVal = new TextArrayWritable(new Text[]{title, wordCount, maxWordCountText});
-//            context.write(entry.getKey(), outVal);
+            context.write(entry.getKey(), outVal);
         }
     }
 

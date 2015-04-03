@@ -46,5 +46,7 @@ public class CustomMapper extends Mapper<Text, Text, Text, TextArrayWritable> {
                 context.write(title, outputVal);
             }
         }
+        throw new IOException("Total book count: " + context.getConfiguration().getDouble("Total.Book.Count", 0));
+
     }
 }

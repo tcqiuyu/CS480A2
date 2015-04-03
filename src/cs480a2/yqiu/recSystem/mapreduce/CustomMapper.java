@@ -27,14 +27,15 @@ public class CustomMapper extends Mapper<Text, Text, Text, TextArrayWritable> {
     public void map(Text currentSentence, Text value, Context context) throws IOException, InterruptedException {
         this.context = context;
         this.title = value;
-
         processSentence(currentSentence);
+        throw new IOException("Title: " + title + " --- arr: " + currentSentence);
 
     }
 
     private void processSentence(Text sentence) throws IOException, InterruptedException {
         String sentenceStr = sentence.toString();
         String[] words = sentenceStr.split(" ");
+
 
         for (String word : words) {
 
@@ -46,7 +47,6 @@ public class CustomMapper extends Mapper<Text, Text, Text, TextArrayWritable> {
                 Text[] textArray = {wordText, one, one};
                 TextArrayWritable outputVal = new TextArrayWritable(textArray);
                 context.write(title, outputVal);
-                throw new IOException("Title: " + title + " --- arr: " + outputVal);
 //                throw new IOException("Total book count: " + context.getConfiguration().getDouble("Total.Book.Count", 0));
             }
         }

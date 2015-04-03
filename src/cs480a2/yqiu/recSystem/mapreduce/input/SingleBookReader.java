@@ -178,4 +178,5 @@ public class SingleBookReader extends RecordReader<Text, Text> {
     public void close() throws IOException {
         lineReader.close();
     }
+
 }

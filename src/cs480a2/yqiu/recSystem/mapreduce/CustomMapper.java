@@ -28,7 +28,7 @@ public class CustomMapper extends Mapper<Text, Text, Text, TextArrayWritable> {
         this.context = context;
         this.title = value;
         processSentence(currentSentence);
-        throw new IOException("Key: " + currentSentence + " --- val: " + value);
+//        throw new IOException("Key: " + currentSentence + " --- val: " + value);
     }
 
     private void processSentence(Text sentence) throws IOException, InterruptedException {

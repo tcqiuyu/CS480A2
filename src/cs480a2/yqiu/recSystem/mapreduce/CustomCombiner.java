@@ -51,7 +51,7 @@ public class CustomCombiner extends Reducer<Text, TextArrayWritable, Text, TextA
             context.write(entry.getKey(), outVal);
         }
 
-        throw new IOException("Key: " + title + " --- val: ");
+//        throw new IOException("Key: " + title + " --- val: ");
     }
 
     private class CustomMap extends HashMap<Text, Integer> {

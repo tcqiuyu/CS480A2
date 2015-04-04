@@ -70,10 +70,10 @@ public class SingleBookReader extends RecordReader<Text, Text> {
             try {
                 int readBytes = lineReader.readLine(currentLine);
                 //if does not find line of title, return
-                if (readBytes == 0 || !hasTitle) {
+                if (readBytes == 0) {
                     hasTitle = false;
-                    throw new IOException("filename: " + filename);
-//                    break;
+//                    throw new IOException("filename: " + filename);
+                    return;
                 }
                 //update cursor of linereader
                 start += readBytes;
@@ -90,9 +90,9 @@ public class SingleBookReader extends RecordReader<Text, Text> {
             try {
                 int readBytes = lineReader.readLine(currentLine);
                 //if does not find book start line, return
-                if (readBytes == 0 || !hasStart) {
+                if (readBytes == 0) {
                     hasStart = false;
-                    break;
+                    return;
                 }
                 //update cursor of linereader
                 start += readBytes;

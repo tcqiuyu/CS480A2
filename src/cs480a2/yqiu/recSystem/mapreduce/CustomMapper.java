@@ -24,15 +24,15 @@ public class CustomMapper extends Mapper<Text, Text, Text, TextArrayWritable> {
 
 
     @Override
-    public void map(Text currentSentence, Text value, Context context) throws IOException, InterruptedException {
+    public void map(Text currentLine, Text value, Context context) throws IOException, InterruptedException {
         this.context = context;
         this.title = value;
-        processSentence(currentSentence);
+        processSentence(currentLine);
 //        throw new IOException("Key: " + currentSentence + " --- val: " + value);
     }
 
-    private void processSentence(Text sentence) throws IOException, InterruptedException {
-        String sentenceStr = sentence.toString();
+    private void processSentence(Text line) throws IOException, InterruptedException {
+        String sentenceStr = line.toString();
         String[] words = sentenceStr.split(" ");
 
 

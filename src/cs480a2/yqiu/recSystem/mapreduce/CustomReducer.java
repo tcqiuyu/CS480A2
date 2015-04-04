@@ -1,12 +1,10 @@
 package cs480a2.yqiu.recSystem.mapreduce;
 
 import cs480a2.yqiu.recSystem.mapreduce.structure.TextArrayWritable;
-import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 /**
  * Created by Qiu on 3/18/15.
@@ -21,24 +19,24 @@ public class CustomReducer extends Reducer<Text, TextArrayWritable, Text, Text> 
 
     double totalBookCount;
 
-    @Override
-    protected void setup(Context context) throws IOException, InterruptedException {
-//        totalBookCount = context.getConfiguration().getDouble("Total.Book.Count", 600);
-        totalBookCount = 600;
-//        throw new IOException("books:" + totalBookCount);
-    }
+//    @Override
+//    protected void setup(Context context) throws IOException, InterruptedException {
+////        totalBookCount = context.getConfiguration().getDouble("Total.Book.Count", 600);
+//        totalBookCount = 600;
+////        throw new IOException("books:" + totalBookCount);
+//    }
 
 
     @Override
     public void reduce(Text key, Iterable<TextArrayWritable> values, Context context) throws IOException, InterruptedException {
         //this collection contains information for a certain word in each book that contains this word
         //information: [ book title that contains this word, word occurance, maximum word occurance for this book ]
-        throw new IOException("Key: " + key + " --- Val: ");
 //        HashMap<TextArrayWritable, Integer> map = new HashMap();
 //
-//        for (TextArrayWritable val : values) {
+        for (TextArrayWritable val : values) {
 //            map.put(val, 0);
-//        }
+            throw new IOException("Key: " + key + " --- Val: " + val.toString());
+        }
 //
 //        //calculate the number of books this word occurs
 //        double bookOccurCount = map.size();
@@ -58,5 +56,5 @@ public class CustomReducer extends Reducer<Text, TextArrayWritable, Text, Text> 
 //            context.write(key, new Text(val.toString()));
 ////            throw new IOException("Key: " + key + " --- Val: " + val + "--- Vals: " + map.keySet().size());
 //        }
+        }
     }
-}

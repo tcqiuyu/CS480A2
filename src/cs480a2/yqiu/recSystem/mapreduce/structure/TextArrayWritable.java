@@ -26,8 +26,8 @@ public class TextArrayWritable extends ArrayWritable {
         Writable[] values = get();
 
         String string = "";
-        for (Writable value : values) {
-            Text valText = (Text) value;
+        for (int i = 0; i < values.length; i++) {
+            Text valText = (Text) values[i];
             String tmp = valText.toString();
             string = string.concat(tmp + " ");
         }

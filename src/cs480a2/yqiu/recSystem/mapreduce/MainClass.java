@@ -2,14 +2,16 @@ package cs480a2.yqiu.recSystem.mapreduce;
 
 import cs480a2.yqiu.recSystem.mapreduce.input.CombineBooksInputFormat;
 import cs480a2.yqiu.recSystem.mapreduce.structure.TextArrayWritable;
+import cs480a2.yqiu.recSystem.mapreduce.tfidf.TFIDFCombiner;
+import cs480a2.yqiu.recSystem.mapreduce.tfidf.TFIDFMapper;
+import cs480a2.yqiu.recSystem.mapreduce.tfidf.TFIDFReducer;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.Partitioner;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 import java.io.IOException;
@@ -32,13 +34,15 @@ public class MainClass {
         job.setJarByClass(MainClass.class);
 
         //set mapper/combiner/reducer
-        job.setMapperClass(CustomMapper.class);
-        job.setCombinerClass(CustomCombiner.class);
-        job.setReducerClass(CustomReducer.class);
+        job.setMapperClass(TFIDFMapper.class);
+        job.setCombinerClass(TFIDFCombiner.class);
+        job.setReducerClass(TFIDFReducer.class);
 
         //set the combine file size to maximum 64MB
         job.getConfiguration().setLong("mapreduce.input.fileinputformat.split.maxsize", (long) (64 * 1024 * 1024));
         job.getConfiguration().setLong("mapreduce.input.fileinputformat.split.minsize.per.node", 0);
+
+        MultipleOutputs.addNamedOutput(job, "tfidf", TextOutputFormat.class, Text.class, TextArrayWritable.class);
 
         //set input path
         FileInputFormat.setInputPaths(job, new Path(args[args.length - 2]));
@@ -50,10 +54,11 @@ public class MainClass {
 
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(TextArrayWritable.class);
+//        job.setMapOutputValueClass(Text.class);
 
         job.setOutputFormatClass(TextOutputFormat.class);
         job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(Text.class);
+        job.setOutputValueClass(TextArrayWritable.class);
 
         System.exit(job.waitForCompletion(true) ? 0 : 1);
 

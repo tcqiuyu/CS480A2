@@ -1,4 +1,4 @@
-package cs480a2.yqiu.recSystem.mapreduce;
+package cs480a2.yqiu.recSystem.mapreduce.tfidf;
 
 import cs480a2.yqiu.recSystem.mapreduce.structure.TextArrayWritable;
 import org.apache.hadoop.io.Text;
@@ -19,18 +19,20 @@ import java.util.Set;
  * Output value: TextArrayWritable ---> [ title, word count for the key, total word count for the book ]
  */
 
-public class CustomCombiner extends Reducer<Text, TextArrayWritable, Text, TextArrayWritable> {
+//public class TFIDFCombiner extends Reducer<Text, Text, Text, Text> {
+    public class TFIDFCombiner extends Reducer<Text, TextArrayWritable, Text, TextArrayWritable> {
 
     @Override
     protected void reduce(Text title, Iterable<TextArrayWritable> values, Context context) throws IOException, InterruptedException {
-
         CustomMap tempMap = new CustomMap();
 //        throw new IOException("Total book count: " + context.getConfiguration().getDouble("Total.Book.Count", 0));
         //compute word count and store them in a map
+//        for (Text val : values) {
         for (TextArrayWritable val : values) {
             //get word
             Text word = (Text) val.get()[0];
-            //update the specific word count
+//            Text word = val;
+//            update the specific word count
             tempMap.increment(word, 1);
         }
 
@@ -48,10 +50,16 @@ public class CustomCombiner extends Reducer<Text, TextArrayWritable, Text, TextA
             Text wordCount = new Text(entry.getValue().toString());
             //output value
             TextArrayWritable outVal = new TextArrayWritable(new Text[]{title, wordCount, maxWordCountText});
+//            TextArrayWritable outVal = new TextArrayWritable(new Text[]{title, wordCount, maxWordCountText});
+//            context.write(entry.getKey(), outVal);
+
             context.write(entry.getKey(), outVal);
 //            throw new IOException("Key: " + entry.getKey() + " --- val: " + outVal);
         }
-
+//
+//        for (TextArrayWritable val : values) {
+//            context.write((Text) val.get()[0], new TextArrayWritable(new Text[]{title}));
+//        }
     }
 
     private class CustomMap extends HashMap<Text, Integer> {

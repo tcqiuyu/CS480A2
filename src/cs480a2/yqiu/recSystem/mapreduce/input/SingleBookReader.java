@@ -70,7 +70,7 @@ public class SingleBookReader extends RecordReader<Text, Text> {
             try {
                 int readBytes = lineReader.readLine(currentLine);
                 //if does not find line of title, return
-                if (readBytes == 0) {
+                if (readBytes == 0 || !hasTitle) {
                     hasTitle = false;
 //                    throw new IOException("filename: " + filename);
                     return;
@@ -81,6 +81,8 @@ public class SingleBookReader extends RecordReader<Text, Text> {
                 hasTitle = false;
                 System.err.println("Error when retriving title for book ---> " + filename);
                 System.err.println(e.getMessage());
+                return;
+//                throw new IOException("filename: " + filename);
             }
 
         }
@@ -90,7 +92,7 @@ public class SingleBookReader extends RecordReader<Text, Text> {
             try {
                 int readBytes = lineReader.readLine(currentLine);
                 //if does not find book start line, return
-                if (readBytes == 0) {
+                if (readBytes == 0 || !hasStart) {
                     hasStart = false;
                     return;
                 }
@@ -100,6 +102,7 @@ public class SingleBookReader extends RecordReader<Text, Text> {
                 hasStart = false;
                 System.err.println("Error when retriving start line for book ---> " + filename);
                 System.err.println(e.getMessage());
+                return;
             }
         }
 
@@ -163,7 +166,7 @@ public class SingleBookReader extends RecordReader<Text, Text> {
 
     @Override
     public Text getCurrentValue() throws IOException, InterruptedException {
-        return title;
+        return new Text(title + ":" + filename);
     }
 
     @Override

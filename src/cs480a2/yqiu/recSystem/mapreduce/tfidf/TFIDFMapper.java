@@ -1,4 +1,4 @@
-package cs480a2.yqiu.recSystem.mapreduce;
+package cs480a2.yqiu.recSystem.mapreduce.tfidf;
 
 import cs480a2.yqiu.recSystem.mapreduce.structure.TextArrayWritable;
 import org.apache.hadoop.io.Text;
@@ -15,7 +15,7 @@ import java.io.IOException;
  * Second "1": Will be accumulated as all words count in given book
  */
 
-public class CustomMapper extends Mapper<Text, Text, Text, TextArrayWritable> {
+public class TFIDFMapper extends Mapper<Text, Text, Text, TextArrayWritable> {
 
     private static final Text one = new Text("1");
     private Context context;
@@ -45,6 +45,7 @@ public class CustomMapper extends Mapper<Text, Text, Text, TextArrayWritable> {
                 Text wordText = new Text(word);
                 Text[] textArray = {wordText, one, one};
                 TextArrayWritable outputVal = new TextArrayWritable(textArray);
+//                context.write(title, wordText);
                 context.write(title, outputVal);
 //                throw new IOException("Total book count: " + context.getConfiguration().getDouble("Total.Book.Count", 0));
             }

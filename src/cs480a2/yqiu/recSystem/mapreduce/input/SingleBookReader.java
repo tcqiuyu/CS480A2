@@ -72,7 +72,8 @@ public class SingleBookReader extends RecordReader<Text, Text> {
                 //if does not find line of title, return
                 if (readBytes == 0 || !hasTitle) {
                     hasTitle = false;
-                    return;
+                    throw new IOException(filename);
+//                    return;
                 }
                 //update cursor of linereader
                 start += readBytes;

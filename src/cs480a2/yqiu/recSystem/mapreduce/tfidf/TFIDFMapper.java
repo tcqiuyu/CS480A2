@@ -12,7 +12,7 @@ import java.io.IOException;
  * Input: Text, Text ---> line, title
  * Output: Text, TextArrayWritable ---> title, [ word, "1", "1" ]
  * First "1": Will be accumulated as freq of this word
- * Second "1": Will be accumulated as all words count in given book
+ * Second "1": Will be accumulated as most freq word occurance count in the given book
  */
 
 public class TFIDFMapper extends Mapper<Text, Text, Text, TextArrayWritable> {

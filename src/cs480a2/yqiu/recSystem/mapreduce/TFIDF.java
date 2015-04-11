@@ -21,7 +21,7 @@ import java.io.IOException;
  * This class identify the configuration of Map reduce task.
  */
 
-public class MainClass {
+public class TFIDF {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
         Configuration configuration = new Configuration();
@@ -31,7 +31,7 @@ public class MainClass {
 
 
         //set main class
-        job.setJarByClass(MainClass.class);
+        job.setJarByClass(TFIDF.class);
 
         //set mapper/combiner/reducer
         job.setMapperClass(TFIDFMapper.class);
@@ -62,6 +62,19 @@ public class MainClass {
 
         System.exit(job.waitForCompletion(true) ? 0 : 1);
 
+
+    }
+
+    private void computeTF() throws IOException {
+        Configuration configuration = new Configuration();
+
+        Job job = Job.getInstance(configuration, "TF");
+
+        job.setMapperClass(TFIDFMapper.class);
+        job.set
+    }
+
+    private void computeIDF(){
 
     }
 }

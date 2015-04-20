@@ -26,7 +26,7 @@ public class CombineBooksReader extends RecordReader<Text, Text> {
     public CombineBooksReader(CombineFileSplit split, TaskAttemptContext context, Integer index) {
         super();
         this.index = index;
-        this.bookReader = new SingleBookReader();
+        this.bookReader = new SingleBookReader(context);
     }
 
     @Override

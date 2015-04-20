@@ -62,14 +62,4 @@ import java.util.Set;
 //        }
     }
 
-    private class CustomMap extends HashMap<Text, Integer> {
-
-        public void increment(Text text, Integer val) {
-            Integer prev = get(text);
-            if (prev != null) {
-                val += prev;
-            }
-            put(text, val);
-        }
-    }
 }

@@ -1,10 +1,13 @@
 package cs480a2.yqiu.recSystem.mapreduce.input;
 
+import cs480a2.yqiu.recSystem.mapreduce.structure.WordMap;
+import cs480a2.yqiu.recSystem.mapreduce.util.BookCounter;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
@@ -36,7 +39,12 @@ public class SingleBookReader extends RecordReader<Text, Text> {
 
     private Configuration configuration;
 
-    public SingleBookReader() {
+    private WordMap wordMap;
+    private TaskAttemptContext context;
+
+    public SingleBookReader(TaskAttemptContext context) {
+        wordMap = new WordMap();
+        this.context = context;
     }
 
     @Override
@@ -143,11 +151,13 @@ public class SingleBookReader extends RecordReader<Text, Text> {
 
 
         if (currentLine.toString().toLowerCase().contains("end") && currentLine.toString().toLowerCase().contains("gutenberg")) {//if reached book end, return false
-            double totalCount = configuration.getDouble("Total.Book.Count", 0);
-            totalCount++;
-
-            configuration.setDouble("Total.Book.Count", totalCount);
+//            double totalCount = configuration.getDouble("Total.Book.Count", 0);
+//            totalCount++;
+//
+//            configuration.setDouble("Total.Book.Count", totalCount);
 //            throw new IOException("currentPos: " + currentPos + " --- end: " + end);
+            Counter counter = context.getCounter(BookCounter.BOOK_COUNT);
+            counter.increment(1);
             return false;
         }
 
@@ -155,6 +165,7 @@ public class SingleBookReader extends RecordReader<Text, Text> {
 //        if (readBytes == 0) {//if cannot read anymore, return false
 //            return false;
 //        }
+
         return true;
     }
 

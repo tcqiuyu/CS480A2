@@ -5,5 +5,5 @@ import org.apache.hadoop.mapreduce.Reducer;
 /**
  * Created by yqiu on 4/3/15.
  */
-public class similarityReducer extends Reducer{
+public class SimilarityReducer extends Reducer{
 }

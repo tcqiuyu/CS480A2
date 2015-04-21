@@ -1,7 +1,5 @@
 package cs480a2.yqiu.recSystem.mapreduce.structure;
 
-import org.apache.hadoop.io.Text;
-
 import java.util.HashMap;
 
 /**
@@ -15,6 +13,7 @@ public class WordCountMap extends HashMap<String, Integer> {
      * When adding an existing key, instead of replacing the old one with new one
      * It add the new value to the old value.
      * This is useful to count word
+     *
      * @param key
      * @param value
      * @return

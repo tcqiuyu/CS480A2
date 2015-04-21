@@ -8,12 +8,10 @@ package cs480a2.yqiu.recSystem.cmdline;
 public class CLI {
 
     private final int NUMBER_OF_RETURN_BOOKS = 30;
-
-
-
-    public static void main(String[] args) {
-
-    }
+//
+//    public static void main(String[] args) {
+//
+//    }
 
 
 }

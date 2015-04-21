@@ -53,13 +53,18 @@ public class TFIDFMapper extends Mapper<Text, TextArrayWritable, Text, TextArray
 
     }
 
+    /**
+     * In cleanup process, emit the number of books that have been processed
+     * @param context
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @Override
     protected void cleanup(Context context) throws IOException, InterruptedException {
         Counter counter = context.getCounter(BookCounter.BOOK_COUNT);
         Long val = counter.getValue();
         Text valText = new Text(val.toString());
+        // "!" has the smallest ASCII value. It will occur at the beginning in the reducer
         context.write(new Text("!"), new TextArrayWritable(new Text[]{valText}));
-
-        super.cleanup(context);
     }
 }

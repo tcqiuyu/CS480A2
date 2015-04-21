@@ -43,7 +43,8 @@ Temporary Items
 .apdisk
 
 .idea/
-.class
+*.class
 out/production
-.iml
+*.iml
 input/
+output/

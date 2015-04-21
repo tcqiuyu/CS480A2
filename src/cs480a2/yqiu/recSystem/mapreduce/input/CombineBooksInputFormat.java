@@ -1,5 +1,6 @@
 package cs480a2.yqiu.recSystem.mapreduce.input;
 
+import cs480a2.yqiu.recSystem.mapreduce.structure.TextArrayWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.RecordReader;
@@ -23,8 +24,8 @@ public class CombineBooksInputFormat extends CombineFileInputFormat {
     public RecordReader createRecordReader(InputSplit split, TaskAttemptContext context) throws IOException {
 
         CombineFileSplit combineFileSplit = (CombineFileSplit) split;
-        CombineFileRecordReader<Text, Text> combineFileRecordReader
-                = new CombineFileRecordReader<Text, Text>(combineFileSplit, context, CombineBooksReader.class);
+        CombineFileRecordReader<Text, TextArrayWritable> combineFileRecordReader
+                = new CombineFileRecordReader<Text, TextArrayWritable>(combineFileSplit, context, CombineBooksReader.class);
         try {
             combineFileRecordReader.initialize(combineFileSplit, context);
         } catch (InterruptedException e) {

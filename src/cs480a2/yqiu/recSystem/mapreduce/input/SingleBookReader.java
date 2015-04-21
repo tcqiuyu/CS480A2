@@ -1,6 +1,7 @@
 package cs480a2.yqiu.recSystem.mapreduce.input;
 
-import cs480a2.yqiu.recSystem.mapreduce.structure.WordMap;
+import cs480a2.yqiu.recSystem.mapreduce.structure.TextArrayWritable;
+import cs480a2.yqiu.recSystem.mapreduce.structure.WordCountMap;
 import cs480a2.yqiu.recSystem.mapreduce.util.BookCounter;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -15,43 +16,46 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.apache.hadoop.util.LineReader;
 
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Created by Qiu on 3/18/15.
  * This record reader takes a single book as input.
- * Output key is the current line
- * Output value is book title
+ * Output key: Text ---> " Title / Maximum Word Count "
+ * Output value: TextArray ---> [ "Word A / Word A Count", ... ]
  */
-public class SingleBookReader extends RecordReader<Text, Text> {
+public class SingleBookReader extends RecordReader<Text, TextArrayWritable> {
 
     private LineReader lineReader;
+    private String title;
     private Text currentLine = new Text(""); //key
-    private Text title; //value
-
-    private long start;
-    private long end;
-    private long currentPos;
-
+    private Text key; //key is book info
+    private TextArrayWritable value; //value is words count array
+    private long start, end, currentPos;
     private String filename;
-
     private boolean hasTitle = true;
     private boolean hasStart = true;
-
-    private Configuration configuration;
-
-    private WordMap wordMap;
+    private WordCountMap wordCountMap;
     private TaskAttemptContext context;
+    private boolean isFinish = false;
 
     public SingleBookReader(TaskAttemptContext context) {
-        wordMap = new WordMap();
+        wordCountMap = new WordCountMap();
         this.context = context;
     }
 
+    /**
+     * @param inputSplit
+     * @param context    the information about the task
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @Override
     public void initialize(InputSplit inputSplit, TaskAttemptContext context) throws IOException, InterruptedException {
 
         FileSplit split = (FileSplit) inputSplit;
-        configuration = context.getConfiguration();
+        Configuration configuration = context.getConfiguration();
         Path path = split.getPath();
         filename = path.getName();
         FileSystem fileSystem = path.getFileSystem(configuration);
@@ -72,6 +76,12 @@ public class SingleBookReader extends RecordReader<Text, Text> {
         prepareToScanBook();
     }
 
+    /**
+     * Preparation to process actual book content
+     * Skip license content, project description etc.
+     *
+     * @throws IOException
+     */
     private void prepareToScanBook() throws IOException {
         //get the title of the book
         while (!containsTitle(currentLine)) {
@@ -80,7 +90,6 @@ public class SingleBookReader extends RecordReader<Text, Text> {
                 //if does not find line of title, return
                 if (readBytes == 0 || !hasTitle) {
                     hasTitle = false;
-//                    throw new IOException("filename: " + filename);
                     return;
                 }
                 //update cursor of linereader
@@ -90,7 +99,6 @@ public class SingleBookReader extends RecordReader<Text, Text> {
                 System.err.println("Error when retriving title for book ---> " + filename);
                 System.err.println(e.getMessage());
                 return;
-//                throw new IOException("filename: " + filename);
             }
 
         }
@@ -121,8 +129,7 @@ public class SingleBookReader extends RecordReader<Text, Text> {
         String lineString = line.toString();
 
         if (lineString.startsWith("Title")) {
-            String titleString = lineString.split(":")[1].substring(1);
-            title = new Text(titleString);
+            title = lineString.split(":")[1].substring(1);
             return true;
         } else {
             return false;
@@ -134,6 +141,11 @@ public class SingleBookReader extends RecordReader<Text, Text> {
         return lineString.toLowerCase().contains("start") && lineString.toLowerCase().contains("gutenberg");
     }
 
+    /**
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @Override
     public boolean nextKeyValue() throws IOException, InterruptedException {
 
@@ -145,39 +157,74 @@ public class SingleBookReader extends RecordReader<Text, Text> {
             return false;
         }
 
-        //read next line
-        int readBytes = lineReader.readLine(currentLine);
-        currentPos += readBytes;
-
-
-        if (currentLine.toString().toLowerCase().contains("end") && currentLine.toString().toLowerCase().contains("gutenberg")) {//if reached book end, return false
-//            double totalCount = configuration.getDouble("Total.Book.Count", 0);
-//            totalCount++;
-//
-//            configuration.setDouble("Total.Book.Count", totalCount);
-//            throw new IOException("currentPos: " + currentPos + " --- end: " + end);
-            Counter counter = context.getCounter(BookCounter.BOOK_COUNT);
-            counter.increment(1);
+        if (!isFinish) {
+            processBookContent();
+            return true;
+        } else {
             return false;
         }
-
-        //Cannot use this statement. Will result in empty output? Why?
-//        if (readBytes == 0) {//if cannot read anymore, return false
-//            return false;
-//        }
-
-        return true;
     }
-
 
     @Override
     public Text getCurrentKey() throws IOException, InterruptedException {
-        return currentLine;
+        return key;
     }
 
+
     @Override
-    public Text getCurrentValue() throws IOException, InterruptedException {
-        return new Text(title + ":" + filename);
+    public TextArrayWritable getCurrentValue() throws IOException, InterruptedException {
+        return value;
+    }
+
+    private void processBookContent() throws IOException {
+
+        currentPos += lineReader.readLine(currentLine);
+        String currentLineStr = currentLine.toString().toLowerCase();
+
+        //Processing book content line by line. And update the word map
+        while (!isFinish) {
+            String[] words = currentLineStr.split(" ");
+            //write all words into the word map
+            for (String word : words) {
+                word = word.trim().replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+                if (!word.equals("")) {
+                    wordCountMap.put(word, 1);
+                }
+            }
+            //detect book end
+            if (currentLineStr.contains("end") && currentLineStr.contains("gutenberg")) {
+                isFinish = true;
+
+                //update counter which stores the book count
+                Counter counter = context.getCounter(BookCounter.BOOK_COUNT);
+                counter.increment(1);
+            }
+            currentPos += lineReader.readLine(currentLine);
+            currentLineStr = currentLine.toString().toLowerCase();
+        }
+
+
+        //convert word map to text array
+        int arrayLen = wordCountMap.entrySet().size();
+        Iterator<Map.Entry<String, Integer>> iterator = wordCountMap.entrySet().iterator();
+        int maxCount = 0, count;
+        String word, wordCount;
+        Text[] wordArray = new Text[arrayLen];
+
+        for (int i = 0; i < arrayLen; i++) {
+            Map.Entry<String, Integer> entry = iterator.next();
+            word = entry.getKey();
+            count = entry.getValue();
+            wordCount = word + "/" + count;
+            wordArray[i] = new Text(wordCount);
+
+            if (count > maxCount) {//get the maximum word count as well
+                maxCount = count;
+            }
+        }
+
+        key = new Text(title + "/" + maxCount);
+        value = new TextArrayWritable(wordArray);
     }
 
     @Override

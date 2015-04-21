@@ -17,7 +17,7 @@ import java.io.IOException;
  * Output value is book title
  */
 
-public class CombineBooksReader extends RecordReader<Text, Text> {
+public class CombineBooksReader extends RecordReader<Text, TextArrayWritable> {
 
 
     private int index;
@@ -35,7 +35,6 @@ public class CombineBooksReader extends RecordReader<Text, Text> {
         FileSplit fileSplit = new FileSplit(combineFileSplit.getPath(index),
                 combineFileSplit.getOffset(index), combineFileSplit.getLength(), combineFileSplit.getLocations());
         bookReader.initialize(fileSplit, context);
-
     }
 
     @Override
@@ -49,7 +48,7 @@ public class CombineBooksReader extends RecordReader<Text, Text> {
     }
 
     @Override
-    public Text getCurrentValue() throws IOException, InterruptedException {
+    public TextArrayWritable getCurrentValue() throws IOException, InterruptedException {
         return bookReader.getCurrentValue();
     }
 

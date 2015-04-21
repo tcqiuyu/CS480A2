@@ -2,11 +2,11 @@ package cs480a2.yqiu.recSystem.mapreduce;
 
 import cs480a2.yqiu.recSystem.mapreduce.input.CombineBooksInputFormat;
 import cs480a2.yqiu.recSystem.mapreduce.structure.TextArrayWritable;
-import cs480a2.yqiu.recSystem.mapreduce.tfidf.TFIDFCombiner;
 import cs480a2.yqiu.recSystem.mapreduce.tfidf.TFIDFMapper;
 import cs480a2.yqiu.recSystem.mapreduce.tfidf.TFIDFReducer;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
@@ -26,16 +26,14 @@ public class TFIDF {
     public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
         Configuration configuration = new Configuration();
         //store an variable of total books count
-        configuration.setDouble("Total.Book.Count", 0);
         Job job = Job.getInstance(configuration, "TF-IDF");
-
 
         //set main class
         job.setJarByClass(TFIDF.class);
 
         //set mapper/combiner/reducer
         job.setMapperClass(TFIDFMapper.class);
-        job.setCombinerClass(TFIDFCombiner.class);
+//        job.setCombinerClass(TFIDFCombiner.class);
         job.setReducerClass(TFIDFReducer.class);
 
         //set the combine file size to maximum 64MB
@@ -58,23 +56,23 @@ public class TFIDF {
 
         job.setOutputFormatClass(TextOutputFormat.class);
         job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(TextArrayWritable.class);
+        job.setOutputValueClass(DoubleWritable.class);
 
         System.exit(job.waitForCompletion(true) ? 0 : 1);
 
 
     }
-
-    private void computeTF() throws IOException {
-        Configuration configuration = new Configuration();
-
-        Job job = Job.getInstance(configuration, "TF");
-
-        job.setMapperClass(TFIDFMapper.class);
-        job.set
-    }
-
-    private void computeIDF(){
-
-    }
+//
+//    private void computeTF() throws IOException {
+//        Configuration configuration = new Configuration();
+//
+//        Job job = Job.getInstance(configuration, "TF");
+//
+//        job.setMapperClass(TFIDFMapper.class);
+//        job.set
+//    }
+//
+//    private void computeIDF(){
+//
+//    }
 }

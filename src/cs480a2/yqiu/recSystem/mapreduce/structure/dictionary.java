@@ -16,7 +16,6 @@ public class dictionary extends Hashtable<String, Double> {
     }
 
     /**
-     * If
      * @param key Word
      * @return  TF-IDF value for a given word, 0 if the word does not exists.
      */

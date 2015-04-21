@@ -1,7 +1,9 @@
 package cs480a2.yqiu.recSystem.mapreduce.tfidf;
 
 import cs480a2.yqiu.recSystem.mapreduce.structure.TextArrayWritable;
+import cs480a2.yqiu.recSystem.mapreduce.util.BookCounter;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Mapper;
 
 import java.io.IOException;
@@ -9,47 +11,55 @@ import java.io.IOException;
 /**
  * Created by Qiu on 3/18/15.
  * Mapper to calculate TF-IDF
- * Input: Text, Text ---> line, title
- * Output: Text, TextArrayWritable ---> title, [ word, "1", "1" ]
- * First "1": Will be accumulated as freq of this word
- * Second "1": Will be accumulated as most freq word occurance count in the given book
+ * Input Key: Text ---> " Title || Maximum word count "
+ * Input Value: TextArrayWritable ---> [ "Word A || Word A Count", ... ]
+ * Output Key: Text ---> Word
+ * Output Value: TextArrayWritable ---> [ Title, Word Count, Maximum Word Count, "1" ]
+ * "1": Will be accumulated as the occurance of books containing this word
  */
 
-public class TFIDFMapper extends Mapper<Text, Text, Text, TextArrayWritable> {
+public class TFIDFMapper extends Mapper<Text, TextArrayWritable, Text, TextArrayWritable> {
 
     private static final Text one = new Text("1");
-    private Context context;
-
-    private Text title;
-
 
     @Override
-    public void map(Text currentLine, Text value, Context context) throws IOException, InterruptedException {
-        this.context = context;
-        this.title = value;
-        processSentence(currentLine);
-//        throw new IOException("Key: " + currentSentence + " --- val: " + value);
-    }
+    public void map(Text key, TextArrayWritable value, Context context) throws IOException, InterruptedException {
 
-    private void processSentence(Text line) throws IOException, InterruptedException {
-        String sentenceStr = line.toString();
-        String[] words = sentenceStr.split(" ");
+        String keyStr = key.toString();
+        String[] keySplit = keyStr.split("/");
+        String title = keySplit[0];
+        String maxCount = keySplit[1];
 
+        //REVIEW: NEED CHECK THIS
+        Text[] wordCounts = (Text[]) value.get();
 
-        for (String word : words) {
+        // Get each word and its count info from input value.
+        Text[] outValArr = new Text[4];
+        for (Text wordCount : wordCounts) {
+            String str = wordCount.toString();
+            String[] strSplit = str.split("/");
+            String word = strSplit[0];
+            String count = strSplit[1];
+            Text outKey = new Text(word);
 
-            //replace all non-alphanumeric char
-            word = word.trim().replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+            outValArr[0] = new Text(title);
+            outValArr[1] = new Text(count);
+            outValArr[2] = new Text(maxCount);
+            outValArr[3] = one;
 
-            if (!word.equals("")) {
-                Text wordText = new Text(word);
-                Text[] textArray = {wordText, one, one};
-                TextArrayWritable outputVal = new TextArrayWritable(textArray);
-//                context.write(title, wordText);
-                context.write(title, outputVal);
-//                throw new IOException("Total book count: " + context.getConfiguration().getDouble("Total.Book.Count", 0));
-            }
+            TextArrayWritable outVal = new TextArrayWritable(outValArr);
+            context.write(outKey, outVal);
         }
 
+    }
+
+    @Override
+    protected void cleanup(Context context) throws IOException, InterruptedException {
+        Counter counter = context.getCounter(BookCounter.BOOK_COUNT);
+        Long val = counter.getValue();
+        Text valText = new Text(val.toString());
+        context.write(new Text("!"), new TextArrayWritable(new Text[]{valText}));
+
+        super.cleanup(context);
     }
 }

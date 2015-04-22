@@ -32,7 +32,7 @@ public class CLI {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String[] lineSplit = line.split("\\t");
-                String[] titles = lineSplit[0].split("_");
+                String[] titles = lineSplit[0].split("\\|");
 
                 Map<String, Double> book1_Vector = getVector(titles[0]);
                 Map<String, Double> book2_Vector = getVector(titles[1]);

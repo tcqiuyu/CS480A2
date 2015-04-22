@@ -32,15 +32,14 @@ public class RecommendationSystem {
 
     public static Path firstTempPath = new Path("/output/tmp/1");
     public static Path secondTempPath = new Path("/output/tmp/2");
-    public static String similarityInputCache = "sim_input_cache";
     public static Path thirdTempPath = new Path("/output/tmp/3");
 
     public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException, URISyntaxException {
         Configuration configuration = new Configuration();
 
-//        computeTFIDF(configuration, args);
-//
-//        computeBCV(configuration);
+        computeTFIDF(configuration, args);
+
+        computeBCV(configuration);
 
         computeSimilarity(configuration);
 
@@ -102,59 +101,36 @@ public class RecommendationSystem {
     }
 
     private static void computeSimilarity(Configuration configuration) throws IOException, URISyntaxException, ClassNotFoundException, InterruptedException {
-//        Job sim_Job = Job.getInstance(configuration, "Similarity");
-//
-//        sim_Job.setJarByClass(RecommendationSystem.class);
-//
-//        sim_Job.setMapperClass(SimilarityMapper.class);
-//        sim_Job.setReducerClass(SimilarityReducer.class);
-//
-//        sim_Job.setMapOutputKeyClass(Text.class);
-//        sim_Job.setMapOutputValueClass(DoubleWritable.class);
-//
-//        sim_Job.setInputFormatClass(TextInputFormat.class);
-//        sim_Job.setOutputFormatClass(TextOutputFormat.class);
-//
-//        sim_Job.addCacheFile(new URI("/output/tmp/2/part-r-00000#bcv"));
-//
-//        FileInputFormat.setInputPaths(sim_Job, "/output/tmp/2/part-r-00000");
-//        FileInputFormat.setInputDirRecursive(sim_Job, true);
-//        FileOutputFormat.setOutputPath(sim_Job, new Path("/output/tmp/3"));
-//
-//        sim_Job.waitForCompletion(true);
 
+        Job similarity_Job = Job.getInstance(configuration, "EuclidD Job");
 
+        similarity_Job.setJarByClass(RecommendationSystem.class);
 
+        similarity_Job.setInputFormatClass(NLineInputFormat.class);
 
-        Job fourthJob = Job.getInstance(configuration, "EuclidD Job");
-
-        fourthJob.setJarByClass(RecommendationSystem.class);
-
-        fourthJob.setInputFormatClass(NLineInputFormat.class);
-
-        NLineInputFormat.addInputPath(fourthJob, new Path("/output/tmp/2/part-r-00000"));
+        NLineInputFormat.addInputPath(similarity_Job, new Path("/output/tmp/2/part-r-00000"));
 
         // Each line of the file gets sent to a mapper
-        fourthJob.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 1);
+        similarity_Job.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 1);
 
         System.out.println("SETUP NLINEINPUT FORMAT!");
 
-        fourthJob.setMapperClass(SimilarityMapper.class);
+        similarity_Job.setMapperClass(SimilarityMapper.class);
 
-        fourthJob.setMapOutputKeyClass(Text.class);
-        fourthJob.setMapOutputValueClass(Text.class);
+        similarity_Job.setMapOutputKeyClass(Text.class);
+        similarity_Job.setMapOutputValueClass(Text.class);
 
-        fourthJob.setReducerClass(SimilarityReducer.class);
+        similarity_Job.setReducerClass(SimilarityReducer.class);
 
         Path fourthJobInputPath = new Path("/output/tmp/2/part-r-00000");
-        fourthJob.addCacheFile(new URI("/output/tmp/2/part-r-00000#bcv"));
+        similarity_Job.addCacheFile(new URI("/output/tmp/2/part-r-00000#bcv"));
 
         Path fourthJobOutputPath = new Path("/output/tmp/3");
 
-        FileInputFormat.setInputPaths(fourthJob, fourthJobInputPath);
-        FileOutputFormat.setOutputPath(fourthJob, fourthJobOutputPath);
+        FileInputFormat.setInputPaths(similarity_Job, fourthJobInputPath);
+        FileOutputFormat.setOutputPath(similarity_Job, fourthJobOutputPath);
 
-        fourthJob.waitForCompletion(true);
+        similarity_Job.waitForCompletion(true);
     }
 
 }

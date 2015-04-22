@@ -10,7 +10,7 @@ import java.io.IOException;
  * Input Key: Text ---> Title
  * Input Value: Text ---> "Word=TFIDF"
  * Output Key: Text ---> Title
- * Output Value: Text ---> "Word1=TFIDF1 Word2=TFIDF2, ... "
+ * Output Value: Text ---> "Word1=TFIDF1,Word2=TFIDF2, ... "
  */
 public class BCVReducer extends Reducer<Text, Text, Text, Text> {
 
@@ -21,7 +21,7 @@ public class BCVReducer extends Reducer<Text, Text, Text, Text> {
 
         for (Text val : values) {
             String valStr = val.toString();
-            outStr = outStr + " " + valStr;
+            outStr = outStr + "," + valStr;
         }
 
         Text outVal = new Text(outStr.substring(1));

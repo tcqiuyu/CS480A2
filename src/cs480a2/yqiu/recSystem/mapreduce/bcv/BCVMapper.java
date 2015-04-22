@@ -20,8 +20,8 @@ public class BCVMapper extends Mapper<LongWritable, Text, Text, Text> {
         String inVal = value.toString();
         String[] inSplit = inVal.split("\\t");
         String title = inSplit[0];
-        String word = inSplit[1].split(" ")[0];
-        String tfidf = inSplit[1].split(" ")[1];
+        String word = inSplit[1].split("\\|")[0];
+        String tfidf = inSplit[1].split("\\|")[1];
 
         Text outKey = new Text(title);
         Text outVal = new Text(word + "=" + tfidf);

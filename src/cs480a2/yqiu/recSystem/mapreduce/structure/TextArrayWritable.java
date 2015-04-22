@@ -29,7 +29,7 @@ public class TextArrayWritable extends ArrayWritable {
         for (int i = 0; i < values.length; i++) {
             Text valText = (Text) values[i];
             String tmp = valText.toString();
-            string = string.concat(tmp + " ");
+            string = string.concat(tmp + "|");
         }
 
         return string.substring(0, string.length() - 1);

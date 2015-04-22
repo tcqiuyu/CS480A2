@@ -3,6 +3,7 @@ package cs480a2.yqiu.recSystem.mapreduce.tfidf;
 import cs480a2.yqiu.recSystem.mapreduce.structure.TextArrayWritable;
 import cs480a2.yqiu.recSystem.mapreduce.util.BookCounter;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Mapper;
 
@@ -14,13 +15,11 @@ import java.io.IOException;
  * Input Key: Text ---> " Title || Maximum word count "
  * Input Value: TextArrayWritable ---> [ "Word A || Word A Count", ... ]
  * Output Key: Text ---> Word
- * Output Value: TextArrayWritable ---> [ Title, Word Count, Maximum Word Count, "1" ]
- * "1": Will be accumulated as the occurance of books containing this word
+ * Output Value: TextArrayWritable ---> [ Title, Word Count, Maximum Word Count]
  */
 
 public class TFIDFMapper extends Mapper<Text, TextArrayWritable, Text, TextArrayWritable> {
 
-    private static final Text one = new Text("1");
 
     @Override
     public void map(Text key, TextArrayWritable value, Context context) throws IOException, InterruptedException {
@@ -31,11 +30,11 @@ public class TFIDFMapper extends Mapper<Text, TextArrayWritable, Text, TextArray
         String maxCount = keySplit[1];
 
         //REVIEW: NEED CHECK THIS
-        Text[] wordCounts = (Text[]) value.get();
+        Writable[] wordCounts = value.get();
 
         // Get each word and its count info from input value.
-        Text[] outValArr = new Text[4];
-        for (Text wordCount : wordCounts) {
+        Text[] outValArr = new Text[3];
+        for (Writable wordCount : wordCounts) {
             String str = wordCount.toString();
             String[] strSplit = str.split("/");
             String word = strSplit[0];
@@ -45,9 +44,9 @@ public class TFIDFMapper extends Mapper<Text, TextArrayWritable, Text, TextArray
             outValArr[0] = new Text(title);
             outValArr[1] = new Text(count);
             outValArr[2] = new Text(maxCount);
-            outValArr[3] = one;
 
             TextArrayWritable outVal = new TextArrayWritable(outValArr);
+
             context.write(outKey, outVal);
         }
 

@@ -8,12 +8,7 @@ import java.util.Hashtable;
  * Key is the word, Value is its TF-IDF value
  */
 
-public class dictionary extends Hashtable<String, Double> {
-
-    @Override
-    public synchronized Double put(String key, Double value) {
-        return super.put(key, value);
-    }
+public class Dictionary extends Hashtable<String, Double> {
 
     /**
      * @param key Word

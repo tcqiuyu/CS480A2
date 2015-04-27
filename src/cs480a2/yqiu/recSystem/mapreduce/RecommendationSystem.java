@@ -125,7 +125,7 @@ public class RecommendationSystem {
         Path fourthJobInputPath = new Path("/output/tmp/2/part-r-00000");
         similarity_Job.addCacheFile(new URI("/output/tmp/2/part-r-00000#bcv"));
 
-        Path fourthJobOutputPath = new Path("/output/tmp/3");
+        Path fourthJobOutputPath = thirdTempPath;
 
         FileInputFormat.setInputPaths(similarity_Job, fourthJobInputPath);
         FileOutputFormat.setOutputPath(similarity_Job, fourthJobOutputPath);
